@@ -1,0 +1,34 @@
+file = open('sra_data2.fastq') #get file
+fastq_file_output = open('low' ,'w') #output file
+fastq_file_output1 = open('medium' ,'w') #output file
+high = open('high' ,'w') #output file
+count = 0 
+charC = 0 #char count
+lowC = 0
+mediumC = 0
+highC = 0
+lineN=1 #current line 
+for line in file: #iterate through file
+    charC = 0
+    count = 0
+    if lineN%4 == 2:
+        read = line # keep track of read
+    if lineN%4 == 0:
+        lineN = lineN + 1 
+        for char in line:
+            charC = charC + 1 #total characters in line
+            if ord(char) > 61:
+                count = count + 1 #count greater than H
+        count = count / charC
+        if count < .2:
+            fastq_file_output.write(read) # send read to file
+            lowC = lowC + 1
+        if count > .2 and count < .25:
+            fastq_file_output1.write(read)
+            mediumC = mediumC + 1
+        if count > .25:
+            high.write(read)
+            highC = highC + 1
+    else:
+        lineN = lineN + 1
+print (lowC, mediumC, highC)
